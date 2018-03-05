@@ -10,7 +10,7 @@ git clone https://github.com/anthonypelletier/crypto-dashboard/
 
 1. Edit `settings.py` to setup PostgreSQL server
 ```
-nano ./crypto-dashboard/dashboard/settings.py
+nano ./crypto-dashboard/src/dashboard/settings.py
 ```
 
 2. Build image
