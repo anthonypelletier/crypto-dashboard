@@ -1,0 +1,18 @@
+.crypto-currency_icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+}
+.card-profits {
+    margin: 0;
+}
+.card-profits .table {
+    margin-bottom: 0;
+}
+.card-profits .table tr:first-child th,
+.card-profits .table tr:first-child td {
+    border-top: none;
+}
+.card-profits .table tr td {
+    text-align: right;
+}

@@ -1,0 +1,2 @@
+*/5 * * * * root /usr/local/bin/python3 /opt/import-currency.py >> /var/log/import-currency.log
+*/15 * * * * root /usr/local/bin/python3 /opt/import-balance.py >> /var/log/import-balance.log

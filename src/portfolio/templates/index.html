@@ -1,0 +1,209 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card bg-light text-center mt-3 p-3">
+                <h3 class="card-title mb-0">{{ total|floatformat:2 }}<small class="ml-1">$</small></h3>
+                <span><i class="fa fa-fw fa-sync mr-1"></i>{{ refreshed_price|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="card card-profits bg-light mt-3">
+                <table class="table">
+                    <tr>
+                        <th>Weekly profits</th>
+                        <td>
+                            <span class="text-{% if diff_7d >= 0%}success{% else %}danger{% endif %}">
+                                {% if diff_7d >= 0%}+{% endif %}{{ diff_7d|floatformat:2 }}<small class="ml-1">$</small>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Daily profits</th>
+                        <td>
+                            <span class="text-{% if diff_24h >= 0%}success{% else %}danger{% endif %}">
+                                {% if diff_24h >= 0%}+{% endif %}{{ diff_24h|floatformat:2 }}<small class="ml-1">$</small>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Hourly profits</th>
+                        <td>
+                            <span class="text-{% if diff_1h >= 0%}success{% else %}danger{% endif %}">
+                                {% if diff_1h >= 0%}+{% endif %}{{ diff_1h|floatformat:2 }}<small class="ml-1">$</small>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card bg-light text-center mt-3 p-3">
+                <canvas id="pie_chart" style="height: 420px;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% if exchanges|length > 0 %}
+                {% for exchange in exchanges %}
+                    <div class="card mt-3 mb-3">
+                        <div class="card-header">{{ exchange.get_exchange_display }}<span class="float-right"><i class="fa fa-fw fa-sync mr-1"></i>{{ exchange.last_check|date:"d/m/Y H:i" }}</span></div>
+                        <div class="card-body p-0">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th width="20%">Currency</th>
+                                        <th width="15%">Change 7d</th>
+                                        <th width="15%">Change 24h</th>
+                                        <th width="15%">Change 1h</th>
+                                        <th width="10%">Price</th>
+                                        <th width="10%">Amount</th>
+                                        <th width="10%">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for balance in exchange.balances %}
+                                    {% if balance.amount > 0 %}
+                                    <tr>
+                                        <td>{{ balance.rank }}</td>
+                                        <td>
+                                            <img src="{% static 'img' %}/{{ balance.id }}.png" class="crypto-currency_icon" />
+                                            {{ balance.name }}
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if balance.change7d >= 0%}success{% else %}danger{% endif %}">{{ balance.change7d }} %</span>
+                                            <small class="ml-1">{% if balance.change7d >= 0%}+{% endif %}{{ balance.diff7d|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if balance.change24h >= 0%}success{% else %}danger{% endif %}">{{ balance.change24h }} %</span>
+                                            <small class="ml-1">{% if balance.change24h >= 0%}+{% endif %}{{ balance.diff24h|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if balance.change1h >= 0%}success{% else %}danger{% endif %}">{{ balance.change1h }} %</span>
+                                            <small class="ml-1">{% if balance.change1h >= 0%}+{% endif %}{{ balance.diff1h|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>{{ balance.price }}<small class="ml-1">$</small></td>
+                                        <td>{{ balance.amount }}<small class="ml-1">{{ balance.symbol }}</small></td>
+                                        <td>{{ balance.value|floatformat:2 }}<small class="ml-1">$</small></td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="thead-light">
+                                    <tr>
+                                        <th colspan="7" class="text-right">Total :</th>
+                                        <th style="font-weight: normal">{{ exchange.total|floatformat:2 }}<small class="ml-1">$</small></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if addresses|length > 0 %}
+                <div class="card mt-3 mb-3">
+                    <div class="card-header">Addresses<span class="float-right"><i class="fa fa-fw fa-sync mr-1"></i>{{ addresses.0.last_check|date:"d/m/Y H:i" }}</span></div>
+                    <div class="card-body p-0">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="20%">Currency</th>
+                                    <th width="15%">Change 7d</th>
+                                    <th width="15%">Change 24h</th>
+                                    <th width="15%">Change 1h</th>
+                                    <th width="10%">Price</th>
+                                    <th width="10%">Amount</th>
+                                    <th width="10%">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for address in addresses %}
+                                    {% if address.amount > 0 %}
+                                    <tr>
+                                        <td>{{ address.rank }}</td>
+                                        <td>
+                                            <img src="{% static 'img' %}/{{ address.id }}.png" class="crypto-currency_icon" />
+                                            {{ address.name }}
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if address.change7d >= 0%}success{% else %}danger{% endif %}">{{ address.change7d }} %</span>
+                                            <small>{% if address.change7d >= 0%}+{% endif %}{{ address.diff7d|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if address.change24h >= 0%}success{% else %}danger{% endif %}">{{ address.change24h }} %</span>
+                                            <small>{% if address.change24h >= 0%}+{% endif %}{{ address.diff24h|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>
+                                            <span class="text-{% if address.change1h >= 0%}success{% else %}danger{% endif %}">{{ address.change1h }} %</span>
+                                            <small>{% if address.change1h >= 0%}+{% endif %}{{ address.diff1h|floatformat:2 }}<small class="ml-1">$</small></small>
+                                        </td>
+                                        <td>{{ address.price }}<small class="ml-1">$</small></td>
+                                        <td>{{ address.amount }}<small class="ml-1">{{ address.symbol }}</small></td>
+                                        <td>{{ address.value|floatformat:2 }}<small class="ml-1">$</small></td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="thead-light">
+                                <tr>
+                                    <th colspan="7" class="text-right">Total :</th>
+                                    <th style="font-weight: normal">{{ address_total|floatformat:2 }}<small class="ml-1">$</small></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/jquery.number.min.js' %}"></script>
+    <script src="{% static 'js/Chart.js' %}"></script>
+    <script type="text/javascript">
+    $(function(){
+        var pie_chart = new Chart($('#pie_chart'), {
+            type: 'doughnut',
+            options: {
+                title: {
+                    display: true,
+                    fontSize: 18,
+                    fontStyle: "normal",
+                    text: "Portfolio summary"
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function (tooltipItem, data) {
+                            return data.labels[tooltipItem[0].index];
+                        },
+                        label: function (tooltipItem, data) {
+                            var amount = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                            var total = eval(data.datasets[tooltipItem.datasetIndex].data.join("+"));
+                            return parseFloat(amount).toFixed(2) + '$ - ' + parseFloat(amount * 100 / total).toFixed(2) + '%';
+                        }
+                    }
+                }
+            }
+        });
+        $.get("{% url 'api.portfolio' %}", function(datas){
+            var names = [];
+            var values = [];
+            $.each(datas, function(k, data){
+                names.push(data[0]);
+                values.push(data[1]);
+            });
+            pie_chart.data = {
+                datasets: [{
+                    backgroundColor: "#2780E3",
+                    data: values
+                }],
+                labels: names
+            };
+            pie_chart.update();
+        });
+    });
+    </script>
+{% endblock %}
