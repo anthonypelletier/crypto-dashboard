@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, REDI
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView, RedirectView
+from .forms import UserCreationWithEmailForm
 
 
 class LoginView(FormView):
@@ -14,6 +15,17 @@ class LoginView(FormView):
     def form_valid(self, form):
         auth_login(self.request, form.get_user())
         return super(LoginView, self).form_valid(form)
+
+
+class RegisterView(FormView):
+    success_url = reverse_lazy('login')
+    template_name = 'register.html'
+    form_class = UserCreationWithEmailForm
+    redirect_field_name = REDIRECT_FIELD_NAME
+
+    def form_valid(self, form):
+        form.save()
+        return super(RegisterView, self).form_valid(form)
 
 
 class LogoutView(LoginRequiredMixin, RedirectView):

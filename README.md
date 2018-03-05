@@ -23,6 +23,18 @@ docker build -t dashboard ./crypto-dashboard
 docker run -d -p 80:80 dashboard
 ```
 
+4. Launch terminal into container
+```
+docker exec -it dashboard /bin/bash
+```
+
+5. Create tables and superuser
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py createsuperuser
+```
+
 ## Like my work ? Make donations !
 | Method       | Address                                                                          |
 |:-------------|:---------------------------------------------------------------------------------|

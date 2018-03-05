@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 pt-5 ml-md-auto mr-md-auto">
+                <div class="card mb-3">
+                    <div class="card-header">Register</div>
+                    <div class="card-body">
+                        {% if error %}
+                            <div class="alert alert-danger mb-0">
+                                {{ error }}
+                            </div>
+                        {% else %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="{{ form.username.id }}">Username</label>
+                                    <input type="text" class="form-control" name="{{ form.username.name }}" value="{{ form.username.value|default_if_none:'' }}" />
+                                    {% if form.username.errors %}
+                                        <ul>
+                                        {% for error in form.username.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.email.id }}">Email</label>
+                                    <input type="text" class="form-control" name="{{ form.email.name }}" value="{{ form.email.value|default_if_none:'' }}" />
+                                    {% if form.email.errors %}
+                                        <ul>
+                                        {% for error in form.email.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.password1.id }}">Password</label>
+                                    <input type="password" class="form-control" name="{{ form.password1.name }}" value="{{ form.password1.value|default_if_none:'' }}" />
+                                    {% if form.password1.errors %}
+                                        <ul>
+                                        {% for error in form.password1.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.password2.id }}">Password confirmation</label>
+                                    <input type="password" class="form-control" name="{{ form.password2.name }}" value="{{ form.password2.value|default_if_none:'' }}" />
+                                    {% if form.password2.errors %}
+                                        <ul>
+                                        {% for error in form.password2.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="{% url 'login' %}" class="btn btn-block btn-outline-secondary">Login</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-action">
+                                            <input type="submit" class="btn btn-block btn-primary" value="Register" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

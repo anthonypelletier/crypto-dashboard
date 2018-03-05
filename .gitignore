@@ -1,3 +1,5 @@
+*/settings.py
+
 *.egg-info
 *.pot
 *.py[co]
@@ -171,3 +173,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+Supprimerait src/static/img/
