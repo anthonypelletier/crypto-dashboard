@@ -3,3 +3,5 @@ requests
 git+https://github.com/Crypto-toolbox/bitex@dev
 python-kucoin
 lxml
+aiohttp>=3.10.11 # not directly required, pinned by Snyk to avoid a vulnerability
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
